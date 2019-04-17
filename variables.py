@@ -17,6 +17,7 @@ CAPTION = "One Button"
 FRAMERATE = 60
 
 screen = pygame.display.set_mode(SIZE)
+screenrect = screen.get_rect()
 pygame.display.set_caption(CAPTION)
 clock = pygame.time.Clock()
 
