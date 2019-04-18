@@ -5,7 +5,9 @@ pygame.font.init()
 import classes
 import variables
 
-player = classes.Jumper(32, 0, 0, 0, 0, 0, 1, 0, 0)
+player = classes.Jumper(32, 64, 0, 0, 0, 0, 1)
+map = classes.Map('maps/main.txt')
+print(variables.map)
 
 class Main(object):
     def __init__(self):

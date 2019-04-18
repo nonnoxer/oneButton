@@ -22,3 +22,4 @@ pygame.display.set_caption(CAPTION)
 clock = pygame.time.Clock()
 
 done = False
+map = []

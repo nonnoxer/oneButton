@@ -5,7 +5,7 @@ pygame.font.init()
 import variables
 
 class Jumper(pygame.sprite.Sprite):
-    def __init__(self, size, x, y, vx, vy, ax, ay, dax, day):
+    def __init__(self, size, x, y, vx, vy, ax, ay):
         pygame.sprite.Sprite.__init__(self)
         self.img = pygame.image.load('assets/Jumper 0.png')
         self.rect = self.img.get_rect()
@@ -19,17 +19,16 @@ class Jumper(pygame.sprite.Sprite):
         self.vy = vy
         self.ax = ax
         self.ay = ay
-        self.dax = dax
-        self.day = day
+        self.pressed = 0
     def draw(self):
         self.surface.blit(self.img, (0, 0))
         return self.surface
     def update(self):
-        if pygame.key.get_pressed()[pygame.K_SPACE]:
-            if self.ay > 0:
-                self.ay *= -1
-            elif self.ay < 0:
-                self.ay *= -1
+        if pygame.key.get_pressed()[pygame.K_SPACE] and self.pressed == 0:
+            self.ay *= -1
+            self.pressed = 1
+        elif not pygame.key.get_pressed()[pygame.K_SPACE]:
+            self.pressed = 0
         self.rect.y += self.vy
         self.vy += self.ay
         if (self.vy < 10 and self.ay > 0) or (self.vy > -10 and self.ay < 0):
@@ -39,9 +38,25 @@ class Jumper(pygame.sprite.Sprite):
                 self.vy = 10
             elif self.ay < 0:
                 self.vy = -10
-        self.ay+= self.day
         self.rect.x += self.vx
         self.vx += self.ax
         if (self.rect.bottom >= 640 and self.ay > 0) or (self.rect.top <= 0 and self.ay < 0):
             self.vy = 0
         self.rect.clamp_ip(variables.screenrect)
+
+class Map(object):
+    def __init__(self, file):
+        self.file = open(file, 'r')
+        self.contents = self.file.readlines()
+        self.stuff = []
+        for i in self.contents:
+            i = i.replace('\n', '')
+            self.stuff.append(list(i))
+            for j in i:
+                variables.map.append(Tile(j))
+
+class Tile(pygame.sprite.Sprite):
+    def __init__(self, typ):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.typ = typ
