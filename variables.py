@@ -8,10 +8,10 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
-BGCOLOUR = (187, 222, 240)
+BGCOLOUR = WHITE
 
-SIZEX = 640
-SIZEY = 640
+SIZEX = 960
+SIZEY = 540
 SIZE = (SIZEX, SIZEY)
 CAPTION = "One Button"
 FRAMERATE = 60
@@ -22,4 +22,7 @@ pygame.display.set_caption(CAPTION)
 clock = pygame.time.Clock()
 
 done = False
-map = []
+
+bullets = []
+enemies = []
+timer = 0
