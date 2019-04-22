@@ -24,5 +24,8 @@ clock = pygame.time.Clock()
 done = False
 
 bullets = []
+bulletsGroup = pygame.sprite.Group()
 enemies = []
+enemiesGroup = pygame.sprite.Group()
+interval = 96
 timer = 0

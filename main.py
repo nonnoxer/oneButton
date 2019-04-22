@@ -4,6 +4,7 @@ pygame.init()
 pygame.font.init()
 import classes
 import variables
+import random
 
 player = classes.Player(32, 64, variables.SIZEY - 32)
 
@@ -20,6 +21,7 @@ class Main(object):
                 variables.screen.blit(i.draw(), (i.rect.x, i.rect.y))
                 i.update()
                 if i.rect.right < 0 or i.rect.left > variables.SIZEX or i.rect.top > variables.SIZEY:
+                    i.kill()
                     variables.bullets.remove(i)
             for i in variables.enemies:
                 variables.screen.blit(i.draw(), (i.rect.x, i.rect.y))
@@ -27,10 +29,23 @@ class Main(object):
             variables.screen.blit(player.draw(), (player.rect.x, player.rect.y))
             player.update()
 
-            if variables.timer >= 48:
-                variables.enemies.append(classes.Enemy(32, variables.SIZEX, variables.SIZEY - 32))
+            ef_collide = pygame.sprite.groupcollide(variables.enemiesGroup, variables.bulletsGroup, True, True, pygame.sprite.collide_mask)
+            ef_collide_enemies = ef_collide.keys()
+            ef_collide_bullets = ef_collide.values()
+            for i in ef_collide_enemies:
+                variables.enemies.remove(i)
+            for i in ef_collide_bullets:
+                variables.bullets.remove(i[0])
+
+            if variables.timer >= variables.interval:
+                variables.enemies.append(classes.Enemy(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32)))
+                variables.enemiesGroup.add(variables.enemies[len(variables.enemies) - 1])
                 variables.timer = 0
+                if variables.interval > 4:
+                    variables.interval -= 1
+            print(variables.interval)
             variables.timer += 1
+
 
             pygame.display.flip()
             variables.clock.tick(variables.FRAMERATE)

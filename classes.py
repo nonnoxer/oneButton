@@ -20,8 +20,9 @@ class Player(pygame.sprite.Sprite):
         self.surface.blit(self.img, (0, 0))
         return self.surface
     def update(self):
-        if pygame.mouse.get_pressed()[0] and self.timer >= 24:
+        if pygame.mouse.get_pressed()[0] and self.timer >= variables.interval / 4:
             variables.bullets.append(Bullet(5, self.rect.centerx, self.rect.centery, pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]))
+            variables.bulletsGroup.add(variables.bullets[len(variables.bullets) - 1])
             self.timer = 0
         self.timer += 1
         self.rect.clamp_ip(variables.screenrect)
@@ -58,8 +59,13 @@ class Enemy(pygame.sprite.Sprite):
 
         self.rect.x = x
         self.rect.y = y
+        self.dy = 0
     def draw(self):
         self.surface.blit(self.img, (0, 0))
         return self.surface
     def update(self):
         self.rect.x -= 1
+        self.rect.y += self.dy
+        if self.rect.bottom >= variables.SIZEY:
+            self.dy *= -1
+        self.dy += 9.81 / 32
