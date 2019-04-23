@@ -26,26 +26,28 @@ class Main(object):
             for i in variables.enemies:
                 variables.screen.blit(i.draw(), (i.rect.x, i.rect.y))
                 i.update()
+                if i.rect.right < 0:
+                    i.kill()
+                    variables.enemies.remove(i)
             variables.screen.blit(player.draw(), (player.rect.x, player.rect.y))
             player.update()
 
-            ef_collide = pygame.sprite.groupcollide(variables.enemiesGroup, variables.bulletsGroup, True, True, pygame.sprite.collide_mask)
+            ef_collide = pygame.sprite.groupcollide(variables.enemiesGroup, variables.bulletsGroup, False, True, pygame.sprite.collide_mask)
             ef_collide_enemies = ef_collide.keys()
             ef_collide_bullets = ef_collide.values()
             for i in ef_collide_enemies:
-                variables.enemies.remove(i)
+                i.hp -= 1
             for i in ef_collide_bullets:
                 variables.bullets.remove(i[0])
 
-            if variables.timer >= variables.interval:
-                variables.enemies.append(classes.Enemy(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32)))
+            if variables.timer % 80 == 0:
+                variables.enemies.append(classes.Enemy1(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32)))
                 variables.enemiesGroup.add(variables.enemies[len(variables.enemies) - 1])
-                variables.timer = 0
-                if variables.interval > 4:
-                    variables.interval -= 1
-            print(variables.interval)
+                if variables.timer % 400 == 0:
+                    variables.enemies.append(classes.Enemy2(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32)))
+                    variables.enemiesGroup.add(variables.enemies[len(variables.enemies) - 1])
+                    variables.timer = 0
             variables.timer += 1
-
 
             pygame.display.flip()
             variables.clock.tick(variables.FRAMERATE)
