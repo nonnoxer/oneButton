@@ -18,6 +18,8 @@ class Player(pygame.sprite.Sprite):
         self.dy = 0
         self.timer = 0
     def draw(self):
+        self.surface = pygame.Surface((32, 32), pygame.SRCALPHA, 32)
+        self.surface = self.surface.convert_alpha()
         self.surface.blit(self.img, (0, 0))
         return self.surface
     def update(self):
