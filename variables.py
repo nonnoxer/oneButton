@@ -28,3 +28,5 @@ bulletsGroup = pygame.sprite.Group()
 enemies = []
 enemiesGroup = pygame.sprite.Group()
 timer = 0
+score = 0
+interval = 80

@@ -17,6 +17,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = y
         self.dy = 0
         self.timer = 0
+        self.mult = [0]
     def draw(self):
         self.surface = pygame.Surface((32, 32), pygame.SRCALPHA, 32)
         self.surface = self.surface.convert_alpha()
@@ -32,13 +33,20 @@ class Player(pygame.sprite.Sprite):
             self.rect.clamp_ip(variables.screenrect)
         self.rect.y += self.dy
         if self.timer >= 8:
-            variables.bullets.append(Bullet(5, self.rect.centerx, self.rect.centery))
-            variables.bulletsGroup.add(variables.bullets[len(variables.bullets) - 1])
+            for i in self.mult:
+                if i == 0:
+                    variables.bullets.append(Bullet(5, self.rect.centerx, self.rect.centery, 0))
+                    variables.bulletsGroup.add(variables.bullets[len(variables.bullets) - 1])
+                else:
+                    variables.bullets.append(Bullet(5, self.rect.centerx, self.rect.centery, i))
+                    variables.bulletsGroup.add(variables.bullets[len(variables.bullets) - 1])
+                    variables.bullets.append(Bullet(5, self.rect.centerx, self.rect.centery, -i))
+                    variables.bulletsGroup.add(variables.bullets[len(variables.bullets) - 1])
             self.timer = 0
         self.timer += 1
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, size, x, y):
+    def __init__(self, size, x, y, dy):
         pygame.sprite.Sprite.__init__(self)
         self.img = pygame.image.load('assets/Laser.png')
         self.rect = self.img.get_rect()
@@ -48,11 +56,13 @@ class Bullet(pygame.sprite.Sprite):
 
         self.rect.centerx = x
         self.rect.centery = y
+        self.dy = dy
     def draw(self):
         self.surface.blit(self.img, (0, 0))
         return self.surface
     def update(self):
         self.rect.x += 4
+        self.rect.y += self.dy
 
 class Enemy1(pygame.sprite.Sprite):
     def __init__(self, size, x, y):
@@ -78,6 +88,7 @@ class Enemy1(pygame.sprite.Sprite):
         if self.hp == 0:
             self.kill()
             variables.enemies.remove(self)
+            variables.score += 1
         self.rect.x -= 1
 
 class Enemy2(pygame.sprite.Sprite):
@@ -99,4 +110,5 @@ class Enemy2(pygame.sprite.Sprite):
         if self.hp <= 0:
             self.kill()
             variables.enemies.remove(self)
+            variables.score += 2
         self.rect.x -= 8

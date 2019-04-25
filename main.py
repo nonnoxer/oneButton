@@ -40,14 +40,26 @@ class Main(object):
             for i in ef_collide_bullets:
                 variables.bullets.remove(i[0])
 
-            if variables.timer % 80 == 0:
+            if variables.interval > 0:
+                if variables.timer % variables.interval == 0:
+                    variables.enemies.append(classes.Enemy1(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32)))
+                    variables.enemiesGroup.add(variables.enemies[len(variables.enemies) - 1])
+                    if variables.timer % (variables.interval * 5) == 0:
+                        variables.enemies.append(classes.Enemy2(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32)))
+                        variables.enemiesGroup.add(variables.enemies[len(variables.enemies) - 1])
+                        variables.timer = 0
+            else:
                 variables.enemies.append(classes.Enemy1(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32)))
                 variables.enemiesGroup.add(variables.enemies[len(variables.enemies) - 1])
-                if variables.timer % 400 == 0:
-                    variables.enemies.append(classes.Enemy2(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32)))
-                    variables.enemiesGroup.add(variables.enemies[len(variables.enemies) - 1])
-                    variables.timer = 0
+                variables.enemies.append(classes.Enemy2(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32)))
+                variables.enemiesGroup.add(variables.enemies[len(variables.enemies) - 1])
             variables.timer += 1
+
+            if variables.score % 100 == 0:
+                variables.interval = 80 - variables.score / 10
+                if variables.score / 100 not in player.mult:
+                    player.mult.append(variables.score / 100)
+            print(variables.score)
 
             pygame.display.flip()
             variables.clock.tick(variables.FRAMERATE)
