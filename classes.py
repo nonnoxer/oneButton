@@ -17,7 +17,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = y
         self.dy = 0
         self.timer = 0
-        self.mult = [0]
+        self.mult = []
     def draw(self):
         self.surface = pygame.Surface((32, 32), pygame.SRCALPHA, 32)
         self.surface = self.surface.convert_alpha()
@@ -32,7 +32,7 @@ class Player(pygame.sprite.Sprite):
             self.dy = 0
             self.rect.clamp_ip(variables.screenrect)
         self.rect.y += self.dy
-        if self.timer >= 8:
+        if self.timer >= variables.interval // 10:
             for i in self.mult:
                 if i == 0:
                     variables.bullets.append(Bullet(5, self.rect.centerx, self.rect.centery, 0))
@@ -43,6 +43,7 @@ class Player(pygame.sprite.Sprite):
                     variables.bullets.append(Bullet(5, self.rect.centerx, self.rect.centery, -i))
                     variables.bulletsGroup.add(variables.bullets[len(variables.bullets) - 1])
             self.timer = 0
+        self.mult = range(variables.score // 100 + 1)
         self.timer += 1
 
 class Bullet(pygame.sprite.Sprite):
@@ -65,7 +66,7 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.y += self.dy
 
 class Enemy1(pygame.sprite.Sprite):
-    def __init__(self, size, x, y):
+    def __init__(self, size, x, y, hp, dx):
         pygame.sprite.Sprite.__init__(self)
         self.img = pygame.image.load('assets/Monster.png')
         self.rect = self.img.get_rect()
@@ -75,24 +76,26 @@ class Enemy1(pygame.sprite.Sprite):
 
         self.rect.x = x
         self.rect.y = y
-        self.hp = 3
+        self.hp = hp
+        self.orihp = hp
         self.dy = 0
+        self.dx = dx
     def draw(self):
         self.surface.blit(self.img, (0, 0))
         return self.surface
     def update(self):
-        if self.hp == 2:
-            self.img = pygame.image.load('assets/Monster injure.png')
-        if self.hp == 1:
-            self.img = pygame.image.load('assets/Monster dying.png')
         if self.hp == 0:
             self.kill()
             variables.enemies.remove(self)
             variables.score += 1
-        self.rect.x -= 1
+        elif self.hp / self.orihp <= 1 / 3:
+            self.img = pygame.image.load('assets/Monster dying.png')
+        elif self.hp / self.orihp <= 2 / 3:
+            self.img = pygame.image.load('assets/Monster injure.png')
+        self.rect.x -= self.dx
 
 class Enemy2(pygame.sprite.Sprite):
-    def __init__(self, size, x, y):
+    def __init__(self, size, x, y, hp, dx):
         pygame.sprite.Sprite.__init__(self)
         self.img = pygame.image.load('assets/Monster 2.png')
         self.rect = self.img.get_rect()
@@ -102,7 +105,9 @@ class Enemy2(pygame.sprite.Sprite):
 
         self.rect.x = x
         self.rect.y = y
-        self.hp = 1
+        self.hp = hp
+        self.orihp = hp
+        self.dx = dx
     def draw(self):
         self.surface.blit(self.img, (0, 0))
         return self.surface
@@ -111,4 +116,4 @@ class Enemy2(pygame.sprite.Sprite):
             self.kill()
             variables.enemies.remove(self)
             variables.score += 2
-        self.rect.x -= 8
+        self.rect.x -= self.dx

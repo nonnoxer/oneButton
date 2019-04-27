@@ -29,6 +29,7 @@ class Main(object):
                 if i.rect.right < 0:
                     i.kill()
                     variables.enemies.remove(i)
+                    variables.score -= variables.score // 100 + 1
             variables.screen.blit(player.draw(), (player.rect.x, player.rect.y))
             player.update()
 
@@ -42,23 +43,20 @@ class Main(object):
 
             if variables.interval > 0:
                 if variables.timer % variables.interval == 0:
-                    variables.enemies.append(classes.Enemy1(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32)))
+                    variables.enemies.append(classes.Enemy1(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32), (variables.score // 100 + 1) * 2, variables.score // 100 + 1))
                     variables.enemiesGroup.add(variables.enemies[len(variables.enemies) - 1])
                     if variables.timer % (variables.interval * 5) == 0:
-                        variables.enemies.append(classes.Enemy2(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32)))
+                        variables.enemies.append(classes.Enemy2(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32), variables.score // 100 * 1 + 1, (variables.score // 100 + 1) * 4))
                         variables.enemiesGroup.add(variables.enemies[len(variables.enemies) - 1])
                         variables.timer = 0
             else:
-                variables.enemies.append(classes.Enemy1(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32)))
+                variables.enemies.append(classes.Enemy1(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32), (variables.score // 100 + 1) * 2, variables.score // 100 + 1))
                 variables.enemiesGroup.add(variables.enemies[len(variables.enemies) - 1])
-                variables.enemies.append(classes.Enemy2(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32)))
+                variables.enemies.append(classes.Enemy2(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32), variables.score // 100 * 1 + 1, (variables.score // 100 + 1) * 4))
                 variables.enemiesGroup.add(variables.enemies[len(variables.enemies) - 1])
             variables.timer += 1
 
-            if variables.score % 100 == 0:
-                variables.interval = 80 - variables.score / 10
-                if variables.score / 100 not in player.mult:
-                    player.mult.append(variables.score / 100)
+            variables.interval = 80 - variables.score // 10
             print(variables.score)
 
             pygame.display.flip()
