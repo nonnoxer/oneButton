@@ -87,7 +87,7 @@ class Enemy1(pygame.sprite.Sprite):
         if self.hp == 0:
             self.kill()
             variables.enemies.remove(self)
-            variables.score += 1
+            variables.score += variables.score // 100 + 1
         elif self.hp / self.orihp <= 1 / 3:
             self.img = pygame.image.load('assets/Monster dying.png')
         elif self.hp / self.orihp <= 2 / 3:
@@ -115,5 +115,5 @@ class Enemy2(pygame.sprite.Sprite):
         if self.hp <= 0:
             self.kill()
             variables.enemies.remove(self)
-            variables.score += 2
+            variables.score += variables.score // 100 + 1
         self.rect.x -= self.dx

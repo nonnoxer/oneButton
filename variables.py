@@ -9,6 +9,9 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 BGCOLOUR = WHITE
+zero_to_two = [(7,190,184), (196,255,249), 0, 0, 0] #colour palettes
+three_to_five = [(84,94,117), (184,179,233), 0, 0, 0]
+six_to_never = [(162,62,72), (255,60,56), 0, 0, 0]
 
 SIZEX = 960
 SIZEY = 540
@@ -20,6 +23,9 @@ screen = pygame.display.set_mode(SIZE)
 screenrect = screen.get_rect()
 pygame.display.set_caption(CAPTION)
 clock = pygame.time.Clock()
+font = pygame.font.SysFont('Consolas', 16)
+music = pygame.mixer.music.load("assets/music.ogg")
+pygame.mixer.music.play(-1)
 
 done = False
 
@@ -30,3 +36,4 @@ enemiesGroup = pygame.sprite.Group()
 timer = 0
 score = 0
 interval = 80
+palette = [0, 0, 0, 0, 0]

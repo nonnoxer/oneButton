@@ -14,8 +14,19 @@ class Main(object):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     variables.done = True
-
-            variables.screen.fill(variables.BGCOLOUR)
+            if variables.score >= 600:
+                variables.palette = variables.six_to_never
+            elif variables.score >= 300:
+                variables.palette = variables.three_to_five
+            else:
+                variables.palette = variables.zero_to_two
+            for i in range(3):
+                variables.palette[i + 2] = (variables.palette[0][0] + (i + 1) * 10, variables.palette[0][1] + (i + 1) * 10, variables.palette[0][2] + (i + 1) * 10)
+            pygame.draw.rect(variables.screen, variables.palette[1], (0, 0, 960, 412))
+            pygame.draw.rect(variables.screen, variables.palette[4], (0, 412, 960, 32))
+            pygame.draw.rect(variables.screen, variables.palette[3], (0, 444, 960, 32))
+            pygame.draw.rect(variables.screen, variables.palette[2], (0, 476, 960, 32))
+            pygame.draw.rect(variables.screen, variables.palette[0], (0, 508, 960, 32))
 
             for i in variables.bullets:
                 variables.screen.blit(i.draw(), (i.rect.x, i.rect.y))
@@ -43,21 +54,21 @@ class Main(object):
 
             if variables.interval > 0:
                 if variables.timer % variables.interval == 0:
-                    variables.enemies.append(classes.Enemy1(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32), (variables.score // 100 + 1) * 2, variables.score // 100 + 1))
+                    variables.enemies.append(classes.Enemy1(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32), (variables.score // 100 + 1) * 3, variables.score // 100 + 1))
                     variables.enemiesGroup.add(variables.enemies[len(variables.enemies) - 1])
                     if variables.timer % (variables.interval * 5) == 0:
-                        variables.enemies.append(classes.Enemy2(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32), variables.score // 100 * 1 + 1, (variables.score // 100 + 1) * 4))
+                        variables.enemies.append(classes.Enemy2(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32), variables.score // 100 + 1, (variables.score // 100 + 1) * 4))
                         variables.enemiesGroup.add(variables.enemies[len(variables.enemies) - 1])
                         variables.timer = 0
             else:
-                variables.enemies.append(classes.Enemy1(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32), (variables.score // 100 + 1) * 2, variables.score // 100 + 1))
+                variables.enemies.append(classes.Enemy1(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32), (variables.score // 100 + 1) * 3, variables.score // 100 + 1))
                 variables.enemiesGroup.add(variables.enemies[len(variables.enemies) - 1])
-                variables.enemies.append(classes.Enemy2(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32), variables.score // 100 * 1 + 1, (variables.score // 100 + 1) * 4))
+                variables.enemies.append(classes.Enemy2(32, variables.SIZEX, random.randint(0, variables.SIZEY - 32), variables.score // 100 + 1, (variables.score // 100 + 1) * 4))
                 variables.enemiesGroup.add(variables.enemies[len(variables.enemies) - 1])
             variables.timer += 1
 
             variables.interval = 80 - variables.score // 10
-            print(variables.score)
+            variables.screen.blit(variables.font.render('Score: ' + str(variables.score), False, variables.BLACK), (0, 16))
 
             pygame.display.flip()
             variables.clock.tick(variables.FRAMERATE)
