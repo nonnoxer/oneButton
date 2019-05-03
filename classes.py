@@ -117,3 +117,21 @@ class Enemy2(pygame.sprite.Sprite):
             variables.enemies.remove(self)
             variables.score += variables.score // 100 + 1
         self.rect.x -= self.dx
+
+class BGImage(object):
+    def __init__(self, img, x, y, size, dx):
+        self.img = pygame.image.load(img)
+        self.trux = x
+        self.truy = y
+        self.rect = self.img.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.dx = dx
+        self.surface = pygame.Surface((size, size), pygame.SRCALPHA, 32)
+        self.surface = self.surface.convert_alpha()
+    def draw(self):
+        self.surface.blit(self.img, (0, 0))
+        return self.surface
+    def update(self):
+        self.trux += self.dx
+        self.rect.x = self.trux
